@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day03</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- {{ reversedMessage }} -->
+        <!-- <button @click='alertMsg'>click</button> -->
+        <p v-show="0">methods:{{ reversedMessage1 }}</p>
+        {{ fullName }}
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        let vm = new Vue({
+            el: '#app',
+            data: {
+                message: '大牛比較懶',
+                aaa: 1,
+                firstName: 'Foo',
+                lastName: 'Bar',
+            },
+            computed: {
+                newMsg: {
+                    get() {
+                        console.log('newMsg')
+                        return "new" + this.message
+                    },
+                    set(val) {
+                        this.message = val + "(new)"
+
+                    },
+                },
+                m1() {
+
+                    console.log('m1')
+                    return this.message + 1 + Date.now()
+                },
+                m2() {
+                    console.log('m2')
+                    return this.m1 + 1
+                },
+
+                reversedMessage: function() {
+                    return this.message.split('').reverse().join('')
+                },
+                fullName: {
+                    // getter
+                    get: function() {
+                        return this.firstName + ' ' + this.lastName
+                    },
+                    // setter
+                    set: function(newValue) {
+                        var names = newValue.split(' ')
+                        this.firstName = names[0]
+                        this.lastName = names[names.length - 1]
+                    },
+                },
+            },
+            methods: {
+
+                reversedMessage1: function() {
+                    return this.message.split('').reverse().join('')
+                },
+
+                alertMsg() {
+                    window.alert(this.reversedMessage)
+                },
+            },
+        })
+    </script>
+</body>
+
+</html>
