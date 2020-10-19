@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day04</title>
+    <style>
+        #app.active {
+            background-color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" :class="classArray">
+        <a v-bind:href="link.href" v-bind:target="link.target"> {{ link.content }} </a>
+        <!-- <input v-bind:type="input.type" /> -->
+        <input :type="input.type" :data-aaa="link.content" />
+
+        <!-- style以綁定為優先，並非以後蓋前，加important也沒用 -->
+        <!-- 但若是以陣列方式合併，則還是維持以後蓋前的原則 -->
+        <div class="target" :class="classContent" :style="[styleObject,styleObject1]" style="color:blue !important;">test</div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script>
+        ;
+        (function() {
+            let vm = new Vue({
+                el: '#app',
+                data() {
+                    return {
+                        isActive: true,
+                        link: {
+                            href: "https://www.google.com/",
+                            target: "_blank",
+                            content: "Google",
+                        },
+                        input: {
+                            type: 'text',
+                        },
+                        classContent: {
+                            aaa: true,
+                            bbb: true,
+                            ccc: true,
+                            dd_ee: true,
+                            "ff-gg": true,
+                        },
+                        styleObject: {
+                            color: "red",
+                            fontSize: 30,
+                        },
+                        styleObject1: {
+                            color: "green",
+                            fontSize: 60,
+                        },
+                        classArray: ['aaa', 'bbb', 'ccc', ],
+                    }
+                },
+            })
+        })()
+    </script>
+
+</body>
+
+</html>
