@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day06</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js " integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin=" anonymous "></script>
+</head>
+
+<body>
+    <div id="app">
+        <!-- <h1> {{ count }} </h1>
+        <button v-on:click=" count -= 1">-1</button>
+        <button v-on:click=" count += 1">+1</button> -->
+        <!-- <button v-for="num of total" @click=" count += 1">{{ num-1 }} </button> -->
+        <button v-for="(content,index) of contents" @click="clickHandler2(index,$event)" :data-index="index">{{ index }} </button>
+        <div>
+            <h1 v-for="(content,index) of contents" v-show=" index===count ">{{ content }} </h1>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js "></script>
+    <script>
+        new Vue
+            ({
+                el: '#app',
+                data: {
+                    count: 0,
+                    total: 4,
+                    contents: ["aaa", "bbb", "ccc", "ddd"],
+                },
+                methods: {
+                    clickHandler(event) {
+                        // console.log('click', event)
+                        this.count = (event.target.dataset.index) * 1
+                    },
+                    clickHandler2(index, event) {
+                        //若在template中已經執行，則event將不會再傳出來，必須另用$event參數傳遞出來
+                        console.log(event)
+                        this.count = index
+                    },
+                }
+
+            })
+    </script>
+</body>
+
+</html>
