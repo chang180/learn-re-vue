@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day05</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- <template v-if="show">
+            <h1>Hello Vue</h1>
+            <span>description</span>
+        </template>
+        <template v-else>
+            <h1>XXX</h1>
+            <span>v-if group use</span>
+        </template>
+        <hr> -->
+        <!-- <div v-if="Math.random() > 0.5">
+            Now you see me
+        </div>
+        <div v-else>
+            Now you don't
+        </div> -->
+        <!-- <div v-show="show">
+            Now you see me
+        </div>
+        <div v-show="!show">
+            Now you don't
+        </div> -->
+        <div :class="{active:show}">
+            Now you see me
+        </div>
+        <div :class="{active:! show}">
+            Now you don't
+        </div>
+        {{ content }}
+        <hr>
+
+        <h1 v-for="user,index in userListArray"> {{ user.name }} </h1>
+        <hr>
+        <h1 v-for="value,key in userListObj"> {{ key }} </h1>
+        <hr>
+        <!-- example -->
+        <span v-for="num of 10">{{ num }},</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js "></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js " integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin=" anonymous "></script>
+    <script>
+        const dataMapping = {
+            A: "A Content ",
+            B: "B Content ",
+            C: "C Content ",
+        }
+        new Vue({
+            el: "#app ",
+            data: {
+                show: false,
+                type: 'A',
+                userListArray: [{
+                    name: "Alex",
+                    gender: "male",
+                }, {
+                    name: "Sara",
+                    gender: "female",
+                }, ],
+                userListObj: {
+                    alex: "male",
+                    sara: "female",
+                }
+            },
+            computed: {
+                content() {
+                    return dataMapping[this.type] || "No content "
+                },
+            },
+
+        })
+    </script>
+
+</body>
+
+</html>
