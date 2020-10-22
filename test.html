@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div tabIndex="1">AAA</div>
+
+</body>
+<script>
+    // 見鬼了誰沒事會去記div能不能觸發blur事件的
+    document.querySelector("div").addEventListener("blur", function() {
+        console.log("BLUR");
+    })
+</script>
+
+</html>

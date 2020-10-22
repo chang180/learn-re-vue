@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>day07</title>
+</head>
+
+<body>
+    <div id="app">
+        <p>{{ text }}</p>
+        <p><input type="text" v-model.lazy="text" /></p>
+        <p><input type="text" v-model="text" /></p>
+        <p><textarea name="" id="" cols="30" rows="10" v-model="text"></textarea> </p>
+        <hr>
+        <p><input type="checkbox" v-model="edm" true-value="yes" false-value="no" :value="edm">訂閱EDM</p>
+        <div>
+            <p v-for="(item,index) in checkList"><input type="checkbox" v-model="check" :value="index">{{item}}</p>
+        </div>
+        <hr>
+        <div>
+            <p><input type="radio" value="0" v-model="gender">女</p>
+            <p><input type="radio" value="1" v-model="gender">男</p>
+        </div>
+        <hr>
+        <select v-model="selected">
+            <option disabled :value="null">Please select one</option>
+            <option>A</option>
+            <option value="BBB">B</option>
+            <option>C</option>
+          </select>
+        <span>Selected: {{ selected }}</span>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js "></script>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                text: 'WTF',
+                edm: true,
+                checkList: ["A", "B", "C"],
+                check: ['B', 'A'],
+                gender: 1,
+                selected: null,
+            },
+        })
+    </script>
+
+</body>
+
+</html>

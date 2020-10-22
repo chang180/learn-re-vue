@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day06-1</title>
+</head>
+
+<body>
+    <div id="app">
+        <button v-show="nowPage>1" @click="change(-1)">Prev</button>
+        <div v-for="content of pageList">
+            {{ content }}
+        </div>
+        <button v-show="nowPage < totalPage" @click="change(1)">Next</button>
+    </div>
+
+    <script src=" https://cdn.jsdelivr.net/npm/vue/dist/vue.js "></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                list: ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg', 'hhh', 111, 222, 333, 444, 555, 666],
+                perPage: 4,
+                nowPage: 1,
+            },
+            computed: {
+                pageList() {
+                    let start = (this.nowPage - 1) * this.perPage
+                    return this.list.slice(start, start + this.perPage)
+                },
+                totalPage() {
+                    return Math.ceil(this.list.length / this.perPage)
+                }
+            },
+            methods: {
+                change(direct) {
+                    let page = this.nowPage + direct
+                        //1
+                    this.nowPage = page < 1 ? 1 : page > this.totalPage ? this.totalPage : page
+
+                    //2
+                    // if (page < 1) {
+                    //     this.nowPage = 1
+                    // } else if (page > this.totalPage) {
+                    //     this.nowPage = this.totalPage
+                    // } else {
+                    //     this.nowPage = page
+                    // }
+                },
+            },
+        })
+    </script>
+</body>
+
+</html>
