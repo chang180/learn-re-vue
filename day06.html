@@ -18,6 +18,17 @@
         <div>
             <h1 v-for="(content,index) of contents" v-show=" index===count ">{{ content }} </h1>
         </div>
+
+        <!-- <div @click.capture.stop="nestClick(1)" style="border:1px solid;"> -->
+        <div @click.self="nestClick(1)" style="border:1px solid;">
+            <a href="#" @click="nestClick(2)" style="padding:10px;">
+                <button @click="nestClick(3)">AAA</button> </a>
+        </div>
+
+        <div @scroll.passive="scrollHandler" style="height:100px;border:1px solid;overflow-y:scroll;">
+            <div style="height:500px;"></div>
+        </div>
+        <input type="text" @click.right.prevent="nestClick('mouse right')" />
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js "></script>
@@ -28,7 +39,7 @@
                 data: {
                     count: 0,
                     total: 4,
-                    contents: ["aaa", "bbb", "ccc", "ddd"],
+                    contents: ["aaa", "bbb", "ccc", "ddd", "aaaa", "bbbb", "cccc", "dddd"],
                 },
                 methods: {
                     clickHandler(event) {
@@ -40,7 +51,24 @@
                         console.log(event)
                         this.count = index
                     },
-                }
+                    nestClick(num) {
+                        console.log(num)
+                    },
+                    scrollHandler() {
+                        console.log('SSS')
+                    },
+                    resizeHandler() {
+
+                    },
+                },
+                mouted() {
+                    window.addEventListener("scroll", this.scrollHandler)
+                    window.addEventListener("resize", this.resizeHandler)
+                },
+                beforeDestroy() {
+                    window.removeEventListener("scroll", this.scrollHandler)
+                    window.removeEventListener("resize", this.resizeHandler)
+                },
 
             })
     </script>
