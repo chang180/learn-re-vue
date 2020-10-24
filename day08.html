@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Day08</title>
+    <style>
+        li button {
+            display: none;
+        }
+        
+        li:hover button {
+            display: inline;
+        }
+    </style>
 
 </head>
 
@@ -26,7 +35,7 @@
                     <button @click="cancelHandler">取消</button>
                 </template>
                 <template v-else> {{ item.content}} <button @click="editHandler(item)">修改</button>
-                    <button @click="deleteHandler(index)">刪除</button>
+                    <button @click="deleteHandler(item)">刪除</button>
                 </template></li>
         </ul>
     </div>
@@ -78,12 +87,12 @@
                     })
                     this.inputText = ""
                 },
-                deleteHandler(index) {
+                deleteHandler(item) {
                     // filter做法
-                    // this.list = this.list.filter((item, i) => {
-                    //     return i != index
-                    // })
-                    this.list.splice(index, 1)
+                    this.list = this.list.filter((target) => {
+                            return target != item
+                        })
+                        // this.list.splice(item, 1)
                 },
                 editHandler(item) {
                     this.editing = item
