@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day09-模組化</title>
+    <style>
+        li button {
+            display: none;
+        }
+        
+        li:hover button {
+            display: inline;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- <div id="app"></div> -->
+    <div id="app">
+        <input-component @custom-input="inputHandler" v-model="inputText"></input-component>
+        <input-component2 @custom-input="input2Handler"></input-component2>
+        <filter-component @filter="filterHandler"></filter-component>
+        <ul>
+            <li is="list-item-component" v-for="item of filterList" :key="item.timestamp" :item="item" :editing="editing" @delete="deleteHandler" @edit="editHandler" @complete="completeHandler" @cancel="cancelHandler" @change="changeHandler"></li>
+            <!-- <li v-for="item of filterList" :key="item.timestamp">
+                <template v-if="editing===item">
+                    <input type="text" v-model="editingText">
+                    <button @click="completeHandler">完成</button>
+                    <button @click="cancelHandler">取消</button>
+                </template>
+                <template v-else> 
+                    <input type="checkbox" v-model="item.status">
+                    {{ item.content}} 
+                    <button @click="editHandler(item)">修改</button>
+                    <button @click="deleteHandler(item)">刪除</button>
+                </template>
+            </li> -->
+        </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js "></script>
+    <script>
+        //1.傳物件
+
+        //2.傳資料
+        Vue.component("list-item-component", {
+            data() {
+                return {
+                    //修改內容
+                    editingText: "",
+                }
+            },
+            props: ["item", "editing", ],
+            template: `
+            <li>
+                <template v-if="editing===item">
+                    <input type="text" v-model="editingText">
+                    <button @click="completeHandler">完成</button>
+                    <button @click="cancelHandler">取消</button>
+                </template>
+                <template v-else> 
+                    <input type="checkbox" v-model="status">
+                    {{ item.content}} 
+                    <button @click="editHandler(item)">修改</button>
+                    <button @click="deleteHandler(item)">刪除</button>
+                </template>
+            </li>
+            `,
+
+            computed: {
+                status: {
+                    get() {
+                        return this.item.status
+                    },
+                    set(value) {
+                        this.$emit("change", this.item, value)
+                    }
+                }
+            },
+            methods: {
+                deleteHandler(item) {
+                    this.$emit("delete", item)
+                        // filter做法
+                        // this.list = this.list.filter((target) => {
+                        //         return target != item
+                        // })
+                        // this.list.splice(item, 1)
+                },
+                editHandler(item) {
+                    this.$emit("edit", item)
+                        // this.editing = item
+                    this.editingText = item.content
+                },
+                completeHandler() {
+                    this.$emit("complete", this.editingText)
+                        // this.editing.content = this.editingText
+                    this.cancelHandler()
+                },
+                cancelHandler() {
+                    this.editingText = ""
+                        // this.editing = null
+                    this.$emit("cancel")
+                },
+            }
+        })
+
+        // Vue.component("filter-component", {})
+        Vue.component("FilterComponent", {
+            data: function() {
+                return {
+                    buttonList: [{
+                        text: '全部',
+                        value: 'all'
+                    }, {
+                        text: '未完成',
+                        value: 'open'
+                    }, {
+                        text: '完成',
+                        value: 'done'
+                    }, ]
+                }
+            },
+            template: `
+            <p>
+            <button v-for="item of buttonList" :key="item.text" @click="$emit('filter',item.value)">{{item.text}}</button>
+        </p>
+            `
+        })
+
+        // 1.外到內
+        Vue.component("input-component", {
+            data: function() {
+                return {
+                    compositionStatus: false,
+                }
+            },
+            props: ['value'],
+            template: `
+                <p>
+                <input type="text" 
+                v-bind:value="value"
+                v-on:input="$emit('input',$event.target.value)"
+                @compositionstart="cstartHandler" 
+                @compositionend="cendHandler" 
+                @keyup.enter="inputHandler">
+            </p>
+                `,
+            methods: {
+                cstartHandler() {
+                    this.compositionStatus = true;
+                },
+                cendHandler() {
+                    this.compositionStatus = false;
+                },
+                inputHandler() {
+                    if (this.compositionStatus) return false;
+                    this.$emit("custom-input");
+                },
+
+            }
+        })
+
+        // 2.內到外
+        Vue.component("input-component2", {
+            data: function() {
+                return {
+                    inputText: "",
+                    compositionStatus: false,
+                }
+            },
+            props: ['value'],
+            template: `
+                <p>
+                <input type="text" 
+                v-model="inputText"
+                @compositionstart="cstartHandler" 
+                @compositionend="cendHandler" 
+                @keyup.enter="inputHandler">
+            </p>
+                `,
+            methods: {
+                cstartHandler() {
+                    this.compositionStatus = true;
+                },
+                cendHandler() {
+                    this.compositionStatus = false;
+                },
+                inputHandler() {
+                    if (this.compositionStatus) return false;
+                    this.$emit("custom-input", this.inputText);
+                    this.inputText = "";
+                },
+            }
+        })
+
+        new Vue({
+            //資料
+            el: "#app",
+            data: {
+                inputText: "",
+                list: [],
+                editing: null,
+                editingText: "",
+                show: "all",
+            },
+            computed: {
+                filterList() {
+                    //all,open,done
+                    if (this.show === "all") {
+                        return this.list
+                    } else if (this.show === "open") {
+                        return this.list.filter((item) => {
+                            return item.status === false
+                        })
+                    } else if (this.show === "done") {
+                        return this.list.filter((item) => {
+                            return item.status === true
+                        })
+                    } else {
+                        return []
+                    }
+                },
+            },
+            methods: {
+                filterHandler(value) {
+                    this.show = value
+                },
+
+                inputHandler() {
+                    // console.log("ininder")
+                    this.list.push({
+                        timestamp: new Date().getTime(),
+                        status: false,
+                        content: this.inputText,
+                    });
+                    this.inputText = "";
+                },
+                input2Handler(value) {
+                    // console.log("ininder")
+                    this.list.push({
+                        timestamp: new Date().getTime(),
+                        status: false,
+                        content: value,
+                    });
+                },
+                deleteHandler(item) {
+                    // filter做法
+                    this.list = this.list.filter((target) => {
+                            return target != item
+                        })
+                        // this.list.splice(item, 1)
+                },
+                editHandler(item) {
+                    this.editing = item
+                },
+                completeHandler(value) {
+                    this.editing.content = value
+                },
+                cancelHandler() {
+                    this.editing = null
+                },
+                changeHandler(item, value) {
+                    item.status = value
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
