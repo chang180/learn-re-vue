@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day10</title>
+</head>
+
+<body>
+    <div id="app">
+        <!-- <basic-component :basic-name="name" active :is-active="true" :inside-object="obj"></basic-component> -->
+        <basic-component v-bind="basicBind" str="warning" style="background:red"></basic-component>
+        <input-component checked="checked" class="AAA"></input-component>
+        <!-- <adv-component></adv-component> -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script>
+        const InputComponent = {
+            template: `<label>
+                <input type="checkbox" class="bbb" v-bind="$attrs" />
+                </label>`,
+            inheritAttrs: false,
+            created() {
+
+                console.log("inside created")
+            },
+            mounted() {
+
+                console.log("inside mounted")
+            },
+        }
+        const BasicComponent = {
+                template: `<div style="background:blue !important;">{{ insideCount }}<button @click="insideCount++">+</button> </div>`,
+                // props: ['basicName'],
+                props: {
+                    basicName: {
+                        type: String,
+                        required: true,
+                        default: "XXX",
+                    },
+                    active: Boolean,
+                    "is-active": Boolean,
+                    insideObject: Object,
+                    insideCount: Number,
+                    obj: {
+                        type: Object,
+                        default: undefined,
+                    },
+                    ary: {
+                        type: Array,
+                        default: undefined,
+                    },
+                    str: {
+                        type: String,
+                        default: undefined,
+                        validator: function(value) {
+                            // The value must match one of these strings
+                            return ['success', 'warning', 'danger'].indexOf(value) !== -1
+                        },
+                        num: {
+                            type: Number,
+                            default: undefined,
+                        },
+                    },
+
+                    data() {
+                        return {
+                            insideCount: this.count,
+                        }
+                    },
+
+                }
+            }
+            // const AdvComponent = {
+            //     template: `<basic-component></basic-component>`,
+            //     components: {
+            //         BasicComponent,
+            //     },
+            // }
+            // const components = {
+            //     BasicComponent,
+            //     AdvComponent,
+            // }
+
+
+        Vue.component("basic-component", BasicComponent)
+        Vue.component("input-component", InputComponent)
+            // Vue.component("adv-component", AdvComponent)
+
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    name: "WTF",
+                    count: 0,
+                    obj: {
+                        count: 0,
+                    }
+                }
+            },
+            computed: {
+                basicBind() {
+                    return {
+                        "basic-name": this.name,
+                        active: true,
+                        'is-active': true,
+                        insideObject: this.obj,
+                        count: this.count,
+                    }
+                }
+            },
+            created() {
+
+                console.log("created")
+            },
+            mounted() {
+
+                console.log("mounted")
+            },
+
+        })
+
+        // new Vue({
+        //     el: {
+        //     },
+        //     data,
+        //     computed,
+        //     methods,
+        //     lifecycle,
+        //     watch,
+        // })
+    </script>
+</body>
+
+</html>
