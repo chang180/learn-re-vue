@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day11</title>
+</head>
+
+<body>
+    <div id="app">
+        <basic-component v-model="test"></basic-component>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script>
+        // camelCase 
+        // PascalCase
+        // kebab-case
+        // snake_case
+        Vue.component("BasicComponent", {
+            template: ` 
+            <div class = "basic-component" @click="clickHandler">
+                BasicComponent 
+                </div>
+            `,
+            props: {
+                active: {
+                    type: Boolean,
+                    default: false,
+                }
+            },
+            model: {
+                prop: "active",
+                event: "component-event",
+            },
+            methods: {
+                clickHandler() {
+                    this.$emit("component-event", !this.active)
+                }
+            }
+
+        })
+
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    test: true,
+                }
+            },
+            methods: {
+
+                eventHandler() {
+                    console.log('this is component event')
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
