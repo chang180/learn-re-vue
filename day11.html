@@ -9,7 +9,7 @@
 
 <body>
     <div id="app">
-        <basic-component v-model="test"></basic-component>
+        <basic-component v-model="test" v-bind.sync="content"></basic-component>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
@@ -21,39 +21,58 @@
         Vue.component("BasicComponent", {
             template: ` 
             <div class = "basic-component" @click="clickHandler">
-                BasicComponent 
+                BasicComponent {{ title }}
                 </div>
             `,
             props: {
                 active: {
                     type: Boolean,
                     default: false,
+                },
+                title: {
+                    type: String,
+                    required: true,
+
                 }
             },
+
             model: {
                 prop: "active",
                 event: "component-event",
             },
             methods: {
                 clickHandler() {
+                    // this.title = "New title"
                     this.$emit("component-event", !this.active)
+                    this.$emit("update:title", "New title 2")
                 }
-            }
+            },
+            description: {
+                type: String,
+                required: true,
+            },
 
         })
 
         new Vue({
             el: '#app',
             data() {
+
                 return {
                     test: true,
+                    title: "Hello Vue",
+                    content: {
+                        title: "WTF",
+                        description: "WTFFFFFFF",
+                    }
                 }
             },
             methods: {
 
-                eventHandler() {
-                    console.log('this is component event')
-                }
+                // eventHandler(value) {
+                //     // console.log('this is component event')
+                //     this.title = value
+                // }
             }
         })
     </script>
