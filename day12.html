@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day12</title>
+</head>
+
+<body>
+    <div id="app">
+        <basic-component title="Hello">
+            <!-- 沒用slot，內容會被直接忽略 -->
+            <!-- <a href="#">World</a> -->
+            {{ msg }}
+            <template v-slot:header>
+Header
+            </template>
+            <p>222</p>
+            <!-- 若有設定default，則只會顯然該值 -->
+            <template v-slot:default="slotProps">
+                {{ slotProps.data.first }}
+            </template>
+            <div>333</div>
+            <template v-slot:footer>
+                Footer
+            </template>
+            <a href="#">4444</a>
+        </basic-component>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script>
+        Vue.component("BasicComponent", {
+            template: ` 
+            <div>
+                {{ title }} 
+                <header>
+                    <slot name="header"> This is header</slot>
+                    </header>
+                <main>
+                    若不使用slot，就會以此處設定為預設值
+                    <slot v-bind:data="insideData"> Mr. {{ insideData.last }}</slot>
+
+                    </main>
+                <footer>
+                    <slot name="footer"> This is footer</slot>
+                    </footer>
+                </div>
+            `,
+            data() {
+                return {
+                    msg: "World",
+                    insideData: {
+                        first: "WTFFFFFFF",
+                        last: "FXXK",
+                    }
+                }
+            },
+            props: {
+                title: {
+                    type: String,
+                    required: true,
+
+                }
+            },
+
+        })
+
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    msg: "WTF",
+
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>
