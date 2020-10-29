@@ -18,11 +18,12 @@ Header
             </template>
             <p>222</p>
             <!-- 若有設定default，則只會顯然該值 -->
-            <template v-slot:default="slotProps">
-                {{ slotProps.data.first }}
+            <template v-slot:[slot]>
+                6666666666666
             </template>
             <div>333</div>
-            <template v-slot:footer>
+            <!-- <template v-slot:footer> -->
+            <template #footer>
                 Footer
             </template>
             <a href="#">4444</a>
@@ -72,7 +73,7 @@ Header
             data() {
                 return {
                     msg: "WTF",
-
+                    slot: "default",
                 }
             },
         })
