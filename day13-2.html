@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day13</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/tween.js@16.3.4"></script>
+
+
+    <style>
+        .fade-enter {
+            opacity: 0;
+        }
+        
+        .fade-enter-active {
+            transition: opacity 1s;
+        }
+        
+        .fade-move {
+            transition: transform 2s;
+        }
+        
+        .fade-enter-to {
+            opacity: 1;
+        }
+        
+        .fade-leave {
+            opacity: 1;
+        }
+        
+        .fade-leave-active {
+            transition: opacity 1s;
+        }
+        
+        .fade-leave-to {
+            opacity: 0;
+        }
+        
+        .bounce-enter-active {
+            animation: bounce-in .5s;
+        }
+        
+        .bounce-leave-active {
+            animation: bounce-in .5s reverse;
+        }
+        
+        @keyframes bounce-in {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <animated-integer :value="value"></animated-integer>
+        <button @click="clickHandler"> Shuffle </button>
+
+        <transition-group appear name="fade" :css="false" mode="out-in">
+            <span style="display:inline-block" v-for="num of items" :key="num">{{num}} </>
+        </transition-group>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+    <script>
+        Vue.component('animated-integer', {
+            template: '<span>{{ tweeningValue }}</span>', props: { value: { type: Number, required: true } }, data: function () { return { tweeningValue: 0 } }, watch: { value: function (newValue, oldValue) { this.tween(oldValue, newValue)
+            } }, mounted: function () { this.tween(0, this.value) }, methods: { tween: function (startValue, endValue) { var vm = this function animate() { if (TWEEN.update()) { requestAnimationFrame(animate) } } new TWEEN.Tween({ tweeningValue: startValue
+            }).to({ tweeningValue: endValue }, 500).onUpdate(function () { vm.tweeningValue = this.tweeningValue.toFixed(0) }).start() animate() } } })
+            </script>
+            <script>
+                new Vue({
+                    el: '#app',
+                    data() {
+                        return {
+                            show: true,
+                            value: 0,
+                            items: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+                        }
+                    },
+                    components: {
+                        'v-a': {
+                            template: '<div>Component A</div>'
+                        },
+                        'v-b': {
+                            template: '<div>Component B</div>'
+                        }
+                    },
+                    methods: {
+                        clickHandler() {
+                            this.items = _.shuffle(this.items)
+                        },
+                    },
+                })
+            </script>
+</body>
+
+</html>
+
+</html>

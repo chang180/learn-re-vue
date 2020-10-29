@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day13</title>
+    <title>Day13-2</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js'></script>
     <style>
         .fade-enter {
             opacity: 0;
@@ -56,14 +58,19 @@
 <body>
     <div id="app">
         <button @click="show=!show"> Toggle</button>
-        <transition name="fade">
-            <p v-if="show">Hello! WTF!!!</p>
+        <!-- duration僅影響class存在時間，不影響原本設定 -->
+        <transition :duration="500" name="fade" appear mode="out-in">
+            <p v-if="show" key="h">Hello!</p>
+            <p v-else key="i">It's a Good Day!!!</p>
             <!-- 做進第2個，動畫效果就會失效
-            <p v-if="!show">The Day is Boring.</p> -->
+                <p v-if="!show">The Day is Boring.</p> -->
         </transition>
         <transition name="bounce">
-            <p v-if="!show">The Day is Boring.</p> -->
+            <p v-if="!show">The Day is Boring.</p>
         </transition>
+        <transition-group appear @before-enter="beforeEnterHandler" @enter="enterHandler" @after-enter="afterEnterHandler" @leave="leaveHandler" :css="false" mode="out-in">
+            <component :is="view" :key="view"></component>
+        </transition-group>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
@@ -73,7 +80,37 @@
             data() {
                 return {
                     show: true,
+                    view: 'v-a',
+
                 }
+            },
+            components: {
+                'v-a': {
+                    template: '<div>Component A</div>'
+                },
+                'v-b': {
+                    template: '<div>Component B</div>'
+                }
+            },
+            methods: {
+                beforeEnterHandler(el) {
+                    $(el).css({
+                        opacity: 0,
+                    })
+                },
+                afterEnterHandler(el) {
+                    // $(el).removeAttr('style')
+                    $(el).css({
+                        opacity: '',
+                    })
+                },
+                enterHandler(el, done) {
+                    // $(el).fadeIn(400, done)
+                    $(el).fadeTo(400, 1, done)
+                },
+                leaveHandler(el, done) {
+                    $(el).fadeOut(400, done)
+                },
             },
         })
     </script>
