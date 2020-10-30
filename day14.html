@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day14</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js'></script>
+</head>
+
+<body>
+    <div id="app">
+        {{ count }}
+        <button @click="clickHandler">Add</button>
+        <my-input v-for="num of count" :key="num" :count="count"></my-input>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script>
+        Vue.directive('focus', function(el, binding) {
+            // Focus the element
+            console.log(binding)
+            el.focus()
+
+
+        })
+
+        Vue.config.optionMergeStrategies.methods = function(toVal, fromVal) {
+            // return mergedVal
+            if (!toVal) toVal = {}
+            console.log(toVal, fromVal)
+            return Object.assign(toVal, fromVal)
+        }
+        const mixin1 = {
+            created() {
+                console.log('c1')
+            },
+            methods: {
+                log(payload) {
+                    console.log('1')
+                },
+                aaa() {
+
+                },
+            }
+        }
+        const mixin2 = {
+            created() {
+                console.log('c2')
+            },
+            methods: {
+                log(payload) {
+                    console.log('2')
+                },
+                bbb() {},
+            }
+        }
+
+
+        const MyInput = {
+            props: ['count'],
+            template: `
+            <p><input v-focus="count" /></p>
+            `,
+        }
+        new Vue({
+            el: '#app',
+            components: {
+                MyInput
+            },
+            mixins: [mixin1, mixin2],
+            data() {
+                return {
+                    count: 0,
+                }
+            },
+            methods: {
+                clickHandler() {
+                    this.log('clicked')
+                    this.count++
+                },
+                log() {
+                    console.log('Myself')
+                },
+            },
+            created() {
+                console.log('My Created ')
+            }
+        })
+    </script>
+</body>
+
+</html>
+
+</html>
