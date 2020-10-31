@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day15</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js'></script>
+</head>
+
+<body>
+    <div id="app">
+        {{ first|firstUpper }} {{ last|firstUpper }} {{first+last|firstUpper('aaa',123,456)}}
+        <hr> {{ firstUpper(first) }} {{ firstUpper(last) }} {{firstUpper(first+last) }}
+        <button @click="log('click')">Click Me</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.4.8/vue-router.min.js'></script>
+    <script>
+        const LogPlugin = {
+            install: function(Vue, options) {
+                // console.log(Vue, options)
+                Vue.mixin({
+                    methods: {
+                        log(...args) {
+                            // if (process.env.MODE_ENV === 'develope') {
+                            console.log(...args)
+                                // }
+                        }
+                    }
+
+                })
+            },
+        }
+
+        Vue.use(LogPlugin, {
+            test: true
+        })
+        Vue.filter("firstUpper",
+            function(value, ...args) {
+                console.log(value, ...args)
+                return value.charAt(0).toUpperCase() + value.slice(1)
+            })
+        new Vue({
+            el: '#app',
+            data() {
+                return {
+                    first: 'Chien-wen',
+                    last: 'Chang',
+                }
+            },
+            methods: {
+                firstUpper(value) {
+                    return value.charAt(0).toUpperCase() + value.slice(1)
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
+
+</html>
