@@ -8,17 +8,66 @@
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css' />
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js'></script>
+    <style>
+        .col-12 {
+            float: left;
+            height: 100px;
+            width: calc(50% - 40px);
+            margin-right: 10px;
+            margin-left: 10px;
+            border: 1px solid orange;
+            box-sizing: border-box;
+        }
+        
+        @media(max-width:768px) {
+            .sm\:col-24 {
+                float: left;
+                height: 100px;
+                width: calc(100% - 20px);
+                margin-right: 10px;
+                margin-left: 10px;
+                border: 1px solid orange;
+                box-sizing: border-box;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <div id="app">
-        {{ count }}
+        <!-- {{ count }} -->
+        {{ ww }}
         <button @click="clickHandler">Add</button>
         <my-input v-for="num of count" :key="num" :count="count"></my-input>
+
+        <div id="hook-arguments-example" v-demo:foo.a.b="message"></div>
+        <div class="col-12 sm:col-24" v-width="ww"></div>
+        <div class="col-12 sm:col-24" v-width="ww"></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
     <script>
+        Vue.directive('width', function(el, binding) {
+            // Focus the element
+            console.log(binding)
+            el.innerHTML = el.getBoundingClientRect().width
+
+
+        })
+
+        Vue.directive('demo', {
+            bind: function(el, binding, vnode) {
+                var s = JSON.stringify
+                el.innerHTML =
+                    'name: ' + s(binding.name) + '<br>' +
+                    'value: ' + s(binding.value) + '<br>' +
+                    'expression: ' + s(binding.expression) + '<br>' +
+                    'argument: ' + s(binding.arg) + '<br>' +
+                    'modifiers: ' + s(binding.modifiers) + '<br>' +
+                    'vnode keys: ' + Object.keys(vnode).join(', ')
+            }
+        })
+
         Vue.directive('focus', function(el, binding) {
             // Focus the element
             console.log(binding)
@@ -58,25 +107,52 @@
             }
         }
 
-
+        const hookMixin = {
+            mounted() {
+                window.addEventListener('resize', this.resizeHandler)
+                this.resizeHandler()
+            },
+            beforeDestroy() {
+                window.removeEventListener('resize', this.resizeHandler)
+            },
+            methods: {
+                resizeHandler() {
+                    console.log('!!!!')
+                }
+            }
+        }
         const MyInput = {
             props: ['count'],
             template: `
-            <p><input v-focus="count" /></p>
+            <p><input v-focus:alex.test="count" /></p>
             `,
+            // <p><input v-focus.test:alex="count" />非正確使用順序</p>
+
         }
         new Vue({
             el: '#app',
             components: {
                 MyInput
             },
-            mixins: [mixin1, mixin2],
+            mixins: [mixin1, mixin2, hookMixin],
             data() {
                 return {
+                    message: "Demo!!!",
                     count: 0,
+                    ww: 0,
                 }
             },
+            mounted() {
+                window.addEventListener('resize', this.resizeHandler)
+                this.resizeHandler()
+            },
+            beforeDestroy() {
+                window.removeEventListener('resize', this.resizeHandler)
+            },
             methods: {
+                // resizeHandler() {
+                //     this.ww = window.innerWidth
+                // },
                 clickHandler() {
                     this.log('clicked')
                     this.count++
