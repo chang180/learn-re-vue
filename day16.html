@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day16</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js'></script>
+    <style>
+        .router-link-exact-active {
+            background: black;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- <div v-if="show===1">
+            Page 1
+        </div>
+        <div v-else>
+            Page 2
+        </div> -->
+        <p>
+            <!-- <a href="#/page1">A page 1</a> -->
+            <router-link to="/">Index</router-link>
+            <router-link to="/page1">Page 1</router-link>
+            <router-link to="/page2">Page 2</router-link>
+            <router-link to="/user/123">User:123</router-link>
+            <router-link to="/user/profile/123">Profile:123</router-link>
+            <router-link to="/user/profile/456">Profile:456</router-link>
+        </p>
+        <router-view></router-view>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.4.8/vue-router.min.js'></script>
+    <script>
+        //router
+        //route
+        const Index = {
+            template: `<div>Index</div>`,
+        }
+        const Page1 = {
+            template: `<div>Page 1</div>`,
+        }
+        const Page2 = {
+            template: `<div>Page 2</div>`,
+        }
+        const User = {
+            template: `<div>User {{ $route.params.id }}
+                {{ num }} <button @click="num++">+</button>
+                </div>`,
+            data() {
+                return {
+                    num: 0
+                }
+            },
+            mounted() {
+                setTimeout(() => {
+                    window.alert('WTF')
+                }, 500)
+            }
+        }
+        const Error = {
+            template: `<div>Not found</div>`
+        }
+        const router = new VueRouter({
+            routes: [{
+                path: '/',
+                component: Index,
+            }, {
+                path: '/page1',
+                component: Page1,
+            }, {
+                path: '/page2',
+                component: Page2,
+            }, {
+                path: '/user/(profile/)?:id(\\d+)?',
+                component: User,
+            }, {
+                path: '/404',
+                component: Error
+            }, {
+                path: '*',
+                redirect: '/404'
+            }, {
+                path: '*',
+                component: Error
+            }]
+        })
+
+        new Vue({
+            el: '#app',
+            router,
+            data() {
+                return {
+                    show: 2
+                }
+            },
+
+        })
+    </script>
+</body>
+
+</html>
+
+</html>
