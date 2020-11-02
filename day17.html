@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day17</title>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js'></script>
+    <style>
+        .router-link-exact-active {
+            background: black;
+            color: white;
+        }
+        
+        .page {
+            box-sizing: border-box;
+            padding: 10px;
+            border: 5px solid red;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <p>
+            <router-link to="/">Index</router-link>
+            <router-link to="/page1">Page 1</router-link>
+            <router-link to="/posts">Posts</router-link>
+            <router-link to="/user">User</router-link>
+            <router-link to="/user/profile">User Profile</router-link>
+            <router-link to="/user/posts">User Posts</router-link>
+
+            <button @click="clickHandler"> User </button>
+            <button @click="$router.go(-1)"> Back </button>
+            <button @click="$router.go(1)"> Forward </button>
+
+            <button @click="google"> Google </button>
+        </p>
+        <router-view></router-view>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.4.8/vue-router.min.js'></script>
+
+    <script>
+        const Index = {
+            template: `<div class="page">Index</div>`,
+        }
+        const Page1 = {
+            template: `<div class="page">Page 1</div>`,
+        }
+        const Profile = {
+            template: `<div class="page">Profile</div>`,
+            mounted() {
+                console.log("Profile")
+            }
+
+        }
+        const Posts = {
+            template: `<div class="page">Posts</div>`,
+            mounted() {
+                console.log("Posts")
+            }
+
+        }
+        const UserContent = {
+            template: `<div class="page">User Content</div>`,
+            mounted() {
+                console.log("User Content")
+            }
+
+        }
+        const User = {
+            template: `<div class="page">User
+                <router-view></router-view>
+                </div>`,
+            mounted() {
+                console.log("User")
+            }
+        }
+        const Error = {
+            template: `<div>Not found</div>`
+        }
+        const router = new VueRouter({
+            routes: [{
+                path: '/',
+                component: Index,
+            }, {
+                path: '/page1',
+                component: Page1,
+            }, {
+                path: '/user',
+                component: User,
+                children: [{
+                    path: "",
+                    component: UserContent
+                }, {
+                    path: "profile",
+                    component: Profile
+                }, {
+                    path: "posts",
+                    component: Posts
+                }, {
+                    path: "/posts",
+                    component: Posts
+
+                }]
+            }]
+        })
+
+        new Vue({
+            el: '#app',
+            router,
+            data() {
+                return {
+                    show: 2
+                }
+            },
+            methods: {
+                clickHandler() {
+                    // this.$router.push('/user', this.completeHandler)
+                    let route = this.$router.replace('/user')
+
+                    console.log(route)
+                },
+                completeHandler() {
+                    console.log("complete")
+                },
+                google() {
+                    // window.history.pushState({}, '', '/google')
+                    // this.$router.push('http://google.com')
+                    window.location.href = 'http://google.com'
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
+
+</html>
