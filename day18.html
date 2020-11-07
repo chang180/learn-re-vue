@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Day17</title>
+    <title>Day18</title>
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.css' />
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js'></script>
@@ -30,22 +30,19 @@
 
 <body>
     <div id="app">
-        <p>
+        <!-- <p>
             <router-link to="/">Index</router-link>
             <router-link to="/page1">Page 1</router-link>
             <router-link to="/page2">Page 2</router-link>
             <router-link to="/user/123">User 123</router-link>
-            <router-link :to="{name:`user`,params:{ id:123 }}">User 123</router-link>
+            <router-link :to="{name:'user',params:{ id:123 }}">User 123</router-link>
             <button @click="$router.push({ name:`user`,params:{ id:123 }})">user 123</button>
             <router-link to="/user/profile/456">User Profile 456</router-link>
-            <router-link to="/user/posts">User Posts</router-link>
+        </p> -->
 
-            <button @click="clickHandler"> User </button>
-            <button @click="$router.go(-1)"> Back </button>
-            <button @click="$router.go(1)"> Forward </button>
+        <!-- <router-view></router-view>
+        <router-view name="lightbox"></router-view> -->
 
-            <button @click="google"> Google </button>
-        </p>
         <router-view name="header"></router-view>
         <router-view name="nav"></router-view>
         <router-view></router-view>
@@ -55,35 +52,27 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.4.8/vue-router.min.js'></script>
 
     <script>
+        const Header = {
+            template: `
+            <p>
+            <router-link to="/">Index</router-link>
+            <router-link to="/page1">Page 1</router-link>
+            <router-link to="/page2">Page 2</router-link>
+            <router-link to="/user/ 123">User 123</router-link>
+            <router-link :to="{name:'user',params:{ id:123 }}">User 123</router-link>
+            <button @click="$router.push({ name:'user',params: {id: 123}})">user 123</button> 
+            <router-link to = "/user/profile/456"> User Profile 456 </router-link> 
+            </p>
+        `
+        }
         const Index = {
-            template: `<div class="page">Index</div>`,
+            template: ` <div class = "page"> Index </div>`,
         }
         const Page1 = {
             template: `<div class="page">Page 1</div>`,
         }
         const Page2 = {
             template: `<div class="page">Page 2</div>`,
-        }
-        const Profile = {
-            template: `<div class="page">Profile</div>`,
-            mounted() {
-                console.log("Profile")
-            }
-
-        }
-        const Posts = {
-            template: `<div class="page">Posts</div>`,
-            mounted() {
-                console.log("Posts")
-            }
-
-        }
-        const UserContent = {
-            template: `<div class="page">User Content</div>`,
-            mounted() {
-                console.log("User Content")
-            }
-
         }
         const User = {
             template: `
@@ -96,14 +85,14 @@
                     num: 0
                 }
             },
-            // mounted() {
-            //     setTimeout(() => {
-            //         window.alert('API')
-            //     }, 500);
-            // }
+            mounted() {
+                setTimeout(() => {
+                    window.alert('API')
+                }, 500);
+            }
         }
         const Error = {
-            template: `<div>Not found</div>`
+            template: `<div> 404 </div>`
         }
         const router = new VueRouter({
             routes: [{
@@ -111,16 +100,28 @@
                 // component: Index,
                 components: {
                     default: Index,
-                    // header:
+                    header: Header,
+                    nav: Page1
                 },
                 name: 'index'
             }, {
                 path: '/page1',
-                component: Page1,
-                name: 'page1'
+                // component: Page1,
+                components: {
+                    default: Page1,
+                    header: Header,
+                    nav: Page1
+                },
+                name: 'page1',
+                alias: 'page111'
             }, {
                 path: '/page2',
-                component: Page2,
+                // component: Page2,
+                // components: {
+                //     default: Page2,
+                //     header: Header,
+                //     nav: Page1
+                redirect: '/404',
                 name: 'page2'
             }, {
                 path: '/user/:id(\\d+)',
@@ -133,7 +134,6 @@
             }, {
                 path: '/404',
                 component: Error,
-                name: 'user'
             }, {
                 path: '*',
                 redirect: '/404'
@@ -145,10 +145,10 @@
 
         new Vue({
             el: '#app',
-            router,
+            router: router,
             data() {
                 return {
-                    show: 2
+                    show: 0
                 }
             },
             methods: {
@@ -161,11 +161,6 @@
                 completeHandler() {
                     console.log("complete")
                 },
-                google() {
-                    // window.history.pushState({}, '', '/google')
-                    // this.$router.push('http://google.com')
-                    window.location.href = 'http://google.com'
-                }
             }
         })
     </script>
