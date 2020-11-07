@@ -58,9 +58,9 @@
             <router-link to="/">Index</router-link>
             <router-link to="/page1">Page 1</router-link>
             <router-link to="/page2">Page 2</router-link>
-            <router-link to="/user/ 123">User 123</router-link>
-            <router-link :to="{name:'user',params:{ id:123 }}">User 123</router-link>
-            <button @click="$router.push({ name:'user',params: {id: 123}})">user 123</button> 
+            <router-link to="/user/123">User 123</router-link>
+            <router-link :to="{name:'User',params:{ id:123 }}">User 123</router-link>
+            <button @click="$router.push({ name:'User',params: {id: 123}})">user 123</button> 
             <router-link to = "/user/profile/456"> User Profile 456 </router-link> 
             </p>
         `
@@ -143,25 +143,9 @@
             }]
         })
 
-        new Vue({
+        let vm = new Vue({
             el: '#app',
-            router: router,
-            data() {
-                return {
-                    show: 0
-                }
-            },
-            methods: {
-                clickHandler() {
-                    // this.$router.push('/user', this.completeHandler)
-                    let route = this.$router.replace('/user')
-
-                    console.log(route)
-                },
-                completeHandler() {
-                    console.log("complete")
-                },
-            }
+            router,
         })
     </script>
 </body>
