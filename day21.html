@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day21</title>
+</head>
+
+<body>
+    <div id="app1">
+        {{ shareState.count }}
+        <button @click="clickHandler">-</button>
+    </div>
+
+    <div id="app2">
+        {{ shareState.count }}
+        <button @click="clickHandler">+</button>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.9/vue.js'></script>
+
+    <script>
+        const store = {
+            state: {
+                count: 1,
+            },
+            increment() {
+                // 可追蹤log
+                this.state.count++
+            },
+            decrement() {
+                // 可追蹤log
+                this.state.count--
+            },
+
+        }
+
+        new Vue({
+            el: '#app1',
+            data: {
+                shareState: store.state,
+            },
+            methods: {
+                clickHandler() {
+                    store.decrement()
+                }
+            }
+        })
+
+
+        new Vue({
+            el: '#app2',
+            data: {
+                shareState: store.state,
+            },
+            computed: {
+                count() {
+                    return store.state
+                },
+            },
+            methods: {
+                clickHandler() {
+                    store.increment()
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
