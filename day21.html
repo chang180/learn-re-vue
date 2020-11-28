@@ -62,7 +62,13 @@
             methods: {
                 clickHandler() {
                     store.increment()
-                }
+                },
+                getUserHandler() {
+                    this.$store.dispatch("GET_USER")
+                        //ERR導頁位置 要考慮做在哪裏 
+                    show(this.$store.state.user)
+
+                },
             }
         })
     </script>
