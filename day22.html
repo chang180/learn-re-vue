@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day22</title>
+</head>
+
+<body>
+    <div id="app">
+        <p> {{count}} </p>
+        <!-- <p> {{ xxx.state.count }} </p> -->
+        <p> {{$store.state.count}} </p>
+        <p>{{storeCount}} </p>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vuex/3.5.1/vuex.js'></script>
+
+    <script>
+        const data = {
+                count: 0,
+            }
+            // const ooo = new Vuex.Store({
+            //     state: {
+            //         count: 3,
+            //     },
+            // })
+        const xxx = new Vuex.Store({
+            state: {
+                count: 2,
+                numbers: [0, 1, 1, 2, 3, 5, 8, 13, 21],
+                todos: [{
+                    id: 1,
+                    text: '...',
+                    done: true
+                }, {
+                    id: 2,
+                    text: '...',
+                    done: false
+                }],
+            },
+            getters: {
+                oddNumbers(state) {
+                    return state.numbers.filter((num) => {
+                        // return (num % 2)
+                        return (num % 2) !== 0
+                    })
+                },
+                evenNumbers(state) {
+                    return state.numbers.filter((num) => {
+                        // return (num % 2) - 1
+                        return (num % 2) === 0
+                    })
+                },
+                getTodoById: (state) => (id) => {
+                    return state.todos.find((todo) => todo.id === id)
+                },
+                getTodoById(state) {
+                    return (id) => {
+                        return state.todos.find((todo) => todo.id === id)
+                    }
+                },
+            }
+        })
+        const vm = new Vue({
+            el: '#app',
+            data,
+            store: xxx,
+            // computed: {
+            //     storeCount() {
+            //         return this.$store.state.count
+            //     }
+            // }
+
+            // computed: Vuex.mapState({
+            // storeCount: state => state.count,
+            // storeCount: 'count', //可以有3種方式，這種字串型最方便(不做處理的狀況下)
+            // storeCount() {
+            //     return state.count
+            // }
+
+            // })
+
+            computed: {
+
+                ...
+                Vuex.mapState({
+                    storeCount: 'count',
+                    todos: 'todos',
+                }),
+                ...
+                Vuex.mapGetters({
+                    odd1: 'oddNumbers',
+                    odd2: 'oddNumbers',
+                    get1: 'getTodoById',
+                    get2: 'getTodoById',
+                }),
+            },
+            methods: {
+                getTodyById(id) {
+                    return this.todos.find((todo) => {
+                        return todo.id === id
+                    })
+                }
+            }
+        })
+
+        let countFunction = function() {
+
+        }
+        let co1 = {
+            countFunction
+        }
+        let co2 = {
+                countFunction
+            }
+            // (co1.countFunction===co2.countFunction)=true 若是在vue裏會是false，每次都不一樣
+    </script>
+</body>
+
+</html>
+
+
+<!--
+API-0->前端-1(state)->STORE-2(getter)->COMPONENT-3(computed) -> 畫面
+
+-->
