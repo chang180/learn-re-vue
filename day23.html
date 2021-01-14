@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day23</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ $store.state }}
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vuex/3.5.1/vuex.js'></script>
+
+    <script>
+        const SET_COUNT = 'setCount'
+
+        const store = new Vuex.Store({
+            state: {
+                count: 1,
+                ary: [1, 2, 3, 4, 5, 6],
+            },
+            getters: {
+                odd(state) {
+                    return state.ary.filter((num) => {
+                        return num % 2
+                    })
+                },
+                mapAry(state, getters) {
+                    return state.odd.map((num) => {
+                        return num + 1
+                    })
+
+                }
+            },
+            mutations: {
+                INCREMENT(state) {
+                    state.count++
+                },
+                [SET_COUNT](state, payload) {
+                    state.count = payload.count
+                }
+            },
+            actions: {
+                INCREMENT({
+                    commit,
+                    state
+                }, payload) {
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            try {
+                                axios.xxx().then((res) => {
+                                    // status 2xx,3xx
+                                    commit(SET_COUNT, {
+                                        count: state.count + 1
+                                    })
+                                    resolve({
+                                        data: {
+                                            count: state.count
+                                        }
+                                    })
+                                }).catch((res) => {
+                                    //status 3xx,4xx
+                                    commit(SET_ERR_MSG, {
+                                        text: res.message
+                                    })
+                                    resolve(err[res.status])
+                                })
+                            } catch (e) {
+                                resolve({
+                                    err: e
+                                })
+                            }
+                        }, 5000);
+                    })
+                },
+            },
+        })
+        const vm = new Vue({
+            el: '#app',
+            store,
+        })
+    </script>
+</body>
+
+</html>
