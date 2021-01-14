@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Day24</title>
+</head>
+
+<body>
+    <div id="app">
+        {{ $store.state }}
+        <button @click="$store.commit('ADD_COUNT')">ADD</button>
+        <button @click="$store.commit('a/ADD_COUNT')">ADD A COUNT</button>
+        <button @click="toggleBHandler">Toggle B Module</button>
+    </div>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/vuex/3.5.1/vuex.js'></script>
+
+    <script>
+        const moduleA = {
+            namespaced: true,
+            state: {
+                point: 0,
+            },
+            mutations: {
+                ADD_COUNT(state) {
+                    state.point += 2
+                },
+            },
+            getters: {
+                plusCount(state, getters, rootState, rootGetters) {
+                    return state + 1
+                }
+            },
+            actions: {
+                ACTION_COUNT(context) {
+                    console.log(context.getters.plusCount)
+                    context.dispatch("b/ADD_COUNT", null, {
+                            root: true
+                        }) //欲使用根模組之元件時，必須增加第3個參數，否則會視為要使用該模組之子元件
+                    return context.state + 1
+                }
+            },
+        }
+
+        const moduleB = {
+
+            state: {
+                active: 0,
+            },
+            mutations: {
+                ADD_COUNT(state) {
+                    state.active += 3
+                },
+            }
+        }
+        const store = new Vuex.Store({
+            state: {
+                count: 0,
+            },
+            mutations: {
+                ADD_COUNT(state) {
+                    state.count++
+                },
+            },
+            modules: {
+                a: moduleA,
+                // b: moduleB,
+            },
+        })
+        const vm = new Vue({
+            el: '#app',
+            store,
+            methods: {
+                toggleBHandler() {
+                    (this.$store.hasModule(['a', 'b'])) ? this.$store.unregisterModule(['a', 'b'], moduleB): this.$store.registerModule(['a', 'b'], moduleB)
+                        // if (this.$store.hasModule('b')) {
+                        //     this.$store.unregisterModule('b', moduleB)
+                        // } else {
+                        //     this.$store.registerModule('b', moduleB)
+                        // }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
